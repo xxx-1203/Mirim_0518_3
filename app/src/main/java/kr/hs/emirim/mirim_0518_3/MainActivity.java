@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Chronometer;
+import android.widget.DatePicker;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     Chronometer timer;
     RadioGroup rg;
     TimePicker time;
-    CalendarView data;
+    DatePicker data;
     TextView textResult;
     int selectedYear, selectedMonth, selectedDay;
 
@@ -37,9 +38,9 @@ public class MainActivity extends AppCompatActivity {
         btnStart.setOnClickListener(btnListener);
         btnDone.setOnClickListener(btnListener);
         rg.setOnCheckedChangeListener(rgListener);
-        data.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        data.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView calendarView, int Year, int Month, int Day) {
+            public void onDateChanged(DatePicker datePicker,int Year, int Month, int Day) {
                 selectedYear = Year;
                 selectedMonth = Month+1;
                 selectedDay = Day;

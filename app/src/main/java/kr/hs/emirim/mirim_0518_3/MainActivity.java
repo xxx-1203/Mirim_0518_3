@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Chronometer;
 import android.widget.DatePicker;
+import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     TimePicker time;
     DatePicker data;
     TextView textResult;
+    FrameLayout frame;
     int selectedYear, selectedMonth, selectedDay;
 
     @Override
@@ -33,31 +35,30 @@ public class MainActivity extends AppCompatActivity {
         time = findViewById(R.id.time);
         data = findViewById(R.id.date);
         textResult = findViewById(R.id.text_result);
-        Button btnStart = findViewById(R.id.btn_start);
-        Button btnDone = findViewById(R.id.btn_done);
-        btnStart.setOnClickListener(btnListener);
-        btnDone.setOnClickListener(btnListener);
         rg.setOnCheckedChangeListener(rgListener);
         timer.setOnClickListener(timerListener);
-        textResult.setOnLongClickListener();
+        textResult.setOnLongClickListener(textListener);
+        frame =findViewById(R.id.frame);
+
         data.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
             @Override
-            public void onDateChanged(DatePicker datePicker,int Year, int Month, int Day) {
+            public void onDateChanged(DatePicker datePicker, int Year, int Month, int Day) {
                 selectedYear = Year;
-                selectedMonth = Month+1;
+                selectedMonth = Month + 1;
                 selectedDay = Day;
             }
         });
-        time.setVisibility(View.INVISIBLE);
-        data.setVisibility(View.INVISIBLE);
-        timer.setBase(SystemClock.elapsedRealtime());
+        rg.setVisibility(View.INVISIBLE);
+        frame.setVisibility(View.INVISIBLE);
     }
+
     RadioGroup.OnCheckedChangeListener rgListener = new RadioGroup.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+            frame.setVisibility(View.VISIBLE);
             time.setVisibility(View.INVISIBLE);
             data.setVisibility(View.INVISIBLE);
-            switch (checkedId){
+            switch (checkedId) {
                 case R.id.radio_date:
                     data.setVisibility(View.VISIBLE);
                     break;
@@ -71,17 +72,20 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener timerListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            rg.setVisibility(view.VISIBLE);
             timer.setBase(SystemClock.elapsedRealtime());
             timer.start();
             timer.setTextColor(Color.RED);
         }
     };
-    View.OnClickListener textListener = new View.OnClickListener() {
+    View.OnLongClickListener textListener = new View.OnLongClickListener() {
         @Override
-        public void onClick(View view) {
+        public boolean onLongClick(View view) {
             timer.stop();
             timer.setTextColor(Color.BLUE);
             textResult.setText(selectedYear+"년 "+selectedMonth+"월 "+selectedDay+"일");
             textResult.append(time.getCurrentHour()+"시"+time.getCurrentMinute()+"분 예약완료");
+            return true;
         }
     };
+}
